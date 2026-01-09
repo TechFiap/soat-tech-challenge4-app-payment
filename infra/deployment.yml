@@ -11,7 +11,7 @@ spec:
   template:
     metadata:
       labels:
-        app: payment-app
+        app: payment
     spec:
       serviceAccountName: payment-sa # IMPORTANTE: Service Account para autenticação com AWS
       containers:
