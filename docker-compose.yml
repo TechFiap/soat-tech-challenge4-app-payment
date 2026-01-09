@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  dynamodb-local:
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - dynamodb_data:/home/dynamodblocal
+
+  app:
+    build: .
+    container_name: fastfood-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - dynamodb-local
+    environment:
+      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+      command:
+        dynamodb describe-limits --endpoint-url http://dynamodb-local:8000 --region us-west-2
+
+volumes:
+  dynamodb_data:
