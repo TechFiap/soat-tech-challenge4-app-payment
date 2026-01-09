@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastfood-api-deployment
-  namespace: fastfood-app
+  name: payment-deployment
+  namespace: payment-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fastfood-api
+      app: payment
   template:
     metadata:
       labels:
-        app: fastfood-api
+        app: payment-app
     spec:
-      serviceAccountName: fastfood-api-sa # IMPORTANTE: Service Account para autenticação com AWS
+      serviceAccountName: payment-sa # IMPORTANTE: Service Account para autenticação com AWS
       containers:
-        - name: fastfood-api
-          image: 239409137076.dkr.ecr.us-east-1.amazonaws.com/develop:TAG
+        - name: payment
+          image: 239409137076.dkr.ecr.us-east-1.amazonaws.com/payment:TAG
           #image: hmouraf/fastfood:tech_fase2
           #image: hmouraf/soat-tech-challenge-fast-food-app:feature-build
           ports:
@@ -30,21 +30,21 @@ spec:
               cpu: "512m"      # Máximo de CPU que o container pode usar (0.5 cores)
           envFrom:
             - configMapRef:
-                name: fastfood-api-configmap
+                name: payment-configmap
           env:
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: fastfood-api-secrets # <- Nome do segredo que o External Secrets irá criar
+                  name: payment-secrets # <- Nome do segredo que o External Secrets irá criar
                   key: DATASOURCE_USERNAME
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fastfood-api-secrets # <- Nome do segredo que o External Secrets irá criar
+                  name: payment-secrets # <- Nome do segredo que o External Secrets irá criar
                   key: DATASOURCE_PASSWORD
           livenessProbe:
             httpGet:
-              path: /swagger-ui/index.html
+              path: /payment/swagger-ui/index.html
               port: 8080
             initialDelaySeconds: 60
             timeoutSeconds: 2
@@ -52,7 +52,7 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /swagger-ui/index.html
+              path: /payment/swagger-ui/index.html
               port: 8080
             initialDelaySeconds: 60
             timeoutSeconds: 2
