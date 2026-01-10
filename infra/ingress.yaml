@@ -14,6 +14,6 @@ spec:
         pathType: ImplementationSpecific
         backend:  
           service:
-            name: order-service
+            name: payment-service
             port:
               number: 8080
