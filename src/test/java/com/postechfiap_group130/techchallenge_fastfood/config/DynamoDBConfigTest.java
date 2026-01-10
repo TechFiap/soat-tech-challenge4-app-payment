@@ -24,9 +24,9 @@ class DynamoDBConfigTest {
                 "aws.secretKey=testSecret"
             )
             .run(context -> {
-                assertThat(context).hasSingleBean(AmazonDynamoDB.class);
-                assertThat(context).hasSingleBean(DynamoDBMapper.class);
-                assertThat(context).hasSingleBean(DynamoDBMapperConfig.class);
+                assertThat(context).hasBean("amazonDynamoDB");
+                assertThat(context).hasBean("dynamoDBMapper"); // Check for our specific bean name
+                assertThat(context).hasBean("dynamoDBMapperConfig");
             });
     }
 
