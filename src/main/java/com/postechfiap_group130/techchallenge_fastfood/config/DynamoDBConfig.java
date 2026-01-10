@@ -60,7 +60,9 @@ public class DynamoDBConfig {
         } else {
             // Ambiente AWS (Role/Default Chain)
             builder.withRegion(awsRegion);
-            builder.withCredentials(new DefaultAWSCredentialsProviderChain());
+            // Força o uso do WebIdentityToken para garantir que o IRSA funcione no EKS
+            // Isso evita que ele faça fallback para a role do Node (Instance Profile)
+            builder.withCredentials(com.amazonaws.auth.WebIdentityTokenCredentialsProvider.create());
         }
 
         return builder.build();
