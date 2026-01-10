@@ -11,11 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,12 +33,10 @@ class PaymentWebhookControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser
     void shouldHandlePaymentUpdateSuccessfully() throws Exception {
         PaymentWebhookRequest request = new PaymentWebhookRequest("12345", "APPROVED");
 
         mockMvc.perform(post("/webhook/payments")
-                        .with(csrf()) // Needed if CSRF is enabled by default in Security Config
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
