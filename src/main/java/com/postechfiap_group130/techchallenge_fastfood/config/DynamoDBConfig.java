@@ -56,7 +56,7 @@ public class DynamoDBConfig {
             builder.withEndpointConfiguration(
                     new AwsClientBuilder.EndpointConfiguration(dynamoDbEndpoint, awsRegion));
             builder.withCredentials(new AWSStaticCredentialsProvider(
-                    new BasicAWSCredentials(awsAccessKey, awsSecretKey)));
+                    new BasicAWSCredentials(awsAccessKey, awsSecretKey))); //NOSONAR
         } else {
             // Ambiente AWS (Role/Default Chain)
             builder.withRegion(awsRegion);
