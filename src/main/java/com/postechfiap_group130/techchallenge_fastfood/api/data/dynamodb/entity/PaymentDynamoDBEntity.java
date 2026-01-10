@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@DynamoDBTable(tableName = "Payments")
+@DynamoDBTable(tableName = "payment")
 public class PaymentDynamoDBEntity {
 
     @DynamoDBHashKey(attributeName = "id")
