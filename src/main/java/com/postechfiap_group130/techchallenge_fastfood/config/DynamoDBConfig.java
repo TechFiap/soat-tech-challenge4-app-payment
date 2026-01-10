@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Primary;
     basePackages = "com.postechfiap_group130.techchallenge_fastfood.api.data.dynamodb",
     dynamoDBMapperConfigRef = "dynamoDBMapperConfig"
 )
+@SuppressWarnings("java:S6437") // Suppress Sonar warning for "Hard-coded credentials" as they are injected via values
 public class DynamoDBConfig {
 
     @Value("${aws.dynamodb.endpoint:}")
