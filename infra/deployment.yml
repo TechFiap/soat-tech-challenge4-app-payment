@@ -52,7 +52,7 @@ spec:
                   key: DATASOURCE_PASSWORD
           livenessProbe:
             httpGet:
-              path: /payment/swagger-ui/index.html
+              path: /swagger-ui/index.html
               port: 8080
             initialDelaySeconds: 60
             timeoutSeconds: 2
@@ -60,7 +60,7 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /payment/swagger-ui/index.html
+              path: /swagger-ui/index.html
               port: 8080
             initialDelaySeconds: 60
             timeoutSeconds: 2
