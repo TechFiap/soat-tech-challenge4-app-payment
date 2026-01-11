@@ -4,6 +4,15 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Maven Wrapper
+mvnw
+mvnw.cmd
+.mvn/
+
+# Maven Log files
+maven-shaded-log.xml
+*.log
+
 ### STS ###
 .apt_generated
 .classpath
