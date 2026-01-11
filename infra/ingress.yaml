@@ -17,3 +17,17 @@ spec:
             name: payment-service
             port:
               number: 8080
+      - path: /webhook
+        pathType: Prefix
+        backend:  
+          service:
+            name: payment-service
+            port:
+              number: 8080
+      - path: /mock
+        pathType: Prefix
+        backend:  
+          service:
+            name: payment-service
+            port:
+              number: 8080
