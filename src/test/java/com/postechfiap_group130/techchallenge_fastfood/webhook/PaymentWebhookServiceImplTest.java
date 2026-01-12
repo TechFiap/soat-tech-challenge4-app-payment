@@ -43,7 +43,7 @@ class PaymentWebhookServiceImplTest {
     @Test
     void shouldProcessPaymentUpdateSuccessfully() {
         // Mocking the fluent WebClient API
-        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(webClient.patch()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
         when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
         when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -55,12 +55,12 @@ class PaymentWebhookServiceImplTest {
 
         service.processPaymentUpdate(request);
 
-        verify(webClient).post();
+        verify(webClient).patch();
     }
 
     @Test
     void shouldThrowExceptionWhenWebClientFails() {
-        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(webClient.patch()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
         when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
         when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
