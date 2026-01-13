@@ -1,56 +1,154 @@
 package com.postechfiap_group130.techchallenge_fastfood.api.data.dynamodb.entity;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.postechfiap_group130.techchallenge_fastfood.core.entities.PaymentStatusEnum;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class PaymentDynamoDBEntityTest {
 
     @Test
-    void shouldCreatePaymentEntityCorrectly() {
-        Long orderId = 123L;
-        BigDecimal amount = new BigDecimal("50.00");
-
-        PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity(orderId, amount);
-
-        Assertions.assertEquals(orderId, entity.getOrderId());
-        Assertions.assertEquals(amount, entity.getAmount());
-        Assertions.assertEquals(PaymentStatusEnum.PENDING, entity.getStatus());
-        Assertions.assertNull(entity.getId()); // ID should be null before persistence
-    }
-
-    @Test
-    void shouldSetAndGetValuesCorrectly() {
+    void shouldCreateEmptyConstructor() {
         PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity();
-        String id = "uuid-123";
-        Long orderId = 456L;
-        BigDecimal amount = new BigDecimal("100.00");
-        PaymentStatusEnum status = PaymentStatusEnum.APPROVED;
-
-        entity.setId(id);
-        entity.setOrderId(orderId);
-        entity.setAmount(amount);
-        entity.setStatus(status);
-
-        Assertions.assertEquals(id, entity.getId());
-        Assertions.assertEquals(orderId, entity.getOrderId());
-        Assertions.assertEquals(amount, entity.getAmount());
-        Assertions.assertEquals(status, entity.getStatus());
+        assertNotNull(entity);
     }
-    
+
     @Test
-    void shouldTestAllArgsConstructor() {
-         String id = "uuid-789";
-         Long orderId = 789L;
-         BigDecimal amount = new BigDecimal("10.00");
-         PaymentStatusEnum status = PaymentStatusEnum.REJECTED;
-         
-         PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity(id, orderId, amount, status);
-         
-         Assertions.assertEquals(id, entity.getId());
-         Assertions.assertEquals(orderId, entity.getOrderId());
-         Assertions.assertEquals(amount, entity.getAmount());
-         Assertions.assertEquals(status, entity.getStatus());
+    void shouldCreateAllArgsConstructor() {
+        PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity(
+                "ID123",
+                10L,
+                BigDecimal.TEN,
+                PaymentStatusEnum.APPROVED
+        );
+
+        assertEquals("ID123", entity.getId());
+        assertEquals(10L, entity.getOrderId());
+        assertEquals(BigDecimal.TEN, entity.getAmount());
+        assertEquals(PaymentStatusEnum.APPROVED, entity.getStatus());
+    }
+
+    @Test
+    void shouldCreateCustomConstructor() {
+        PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity(5L, BigDecimal.ONE);
+
+        assertNull(entity.getId());
+        assertEquals(5L, entity.getOrderId());
+        assertEquals(BigDecimal.ONE, entity.getAmount());
+        assertEquals(PaymentStatusEnum.PENDING, entity.getStatus());
+    }
+
+    @Test
+    void shouldSetAndGetFields() {
+        PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity();
+
+        entity.setId("ABC");
+        entity.setOrderId(99L);
+        entity.setAmount(BigDecimal.valueOf(20));
+        entity.setStatus(PaymentStatusEnum.REJECTED);
+
+        assertEquals("ABC", entity.getId());
+        assertEquals(99L, entity.getOrderId());
+        assertEquals(BigDecimal.valueOf(20), entity.getAmount());
+        assertEquals(PaymentStatusEnum.REJECTED, entity.getStatus());
+    }
+
+    @Test
+    void shouldTestEqualsAndHashCode() {
+        PaymentDynamoDBEntity e1 = new PaymentDynamoDBEntity("1", 1L, BigDecimal.ONE, PaymentStatusEnum.APPROVED);
+        PaymentDynamoDBEntity e2 = new PaymentDynamoDBEntity("1", 1L, BigDecimal.ONE, PaymentStatusEnum.APPROVED);
+        PaymentDynamoDBEntity e3 = new PaymentDynamoDBEntity("2", 2L, BigDecimal.TEN, PaymentStatusEnum.REJECTED);
+
+        assertEquals(e1, e2);
+        assertEquals(e1.hashCode(), e2.hashCode());
+
+        assertNotEquals(e1, e3);
+        assertNotEquals(e1.hashCode(), e3.hashCode());
+    }
+
+    @Test
+    void shouldNotBeEqualToDifferentObjectType() {
+        PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity();
+        assertNotEquals(entity, "string");
+    }
+
+    @Test
+    void shouldNotBeEqualWhenNull() {
+        PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity();
+        assertNotEquals(entity, null);
+    }
+
+    @Test
+    void shouldTestToString() {
+        PaymentDynamoDBEntity entity = new PaymentDynamoDBEntity("X", 1L, BigDecimal.ONE, PaymentStatusEnum.APPROVED);
+
+        String result = entity.toString();
+
+        assertNotNull(result);
+        assertTrue(result.contains("X"));
+        assertTrue(result.contains("APPROVED"));
+    }
+
+    @Test
+    void shouldValidateDynamoAnnotations() throws Exception {
+        Field idField = PaymentDynamoDBEntity.class.getDeclaredField("id");
+        Field orderIdField = PaymentDynamoDBEntity.class.getDeclaredField("orderId");
+        Field amountField = PaymentDynamoDBEntity.class.getDeclaredField("amount");
+        Field statusField = PaymentDynamoDBEntity.class.getDeclaredField("status");
+
+        assertNotNull(idField.getAnnotation(DynamoDBHashKey.class));
+        assertNotNull(idField.getAnnotation(DynamoDBAutoGeneratedKey.class));
+
+        assertEquals("orderId", orderIdField.getAnnotation(DynamoDBAttribute.class).attributeName());
+        assertEquals("amount", amountField.getAnnotation(DynamoDBAttribute.class).attributeName());
+        assertEquals("status", statusField.getAnnotation(DynamoDBAttribute.class).attributeName());
+
+        assertNotNull(statusField.getAnnotation(DynamoDBTypeConvertedEnum.class));
+    }
+
+    @Test
+    void shouldFullyCoverEqualsAndHashCode() {
+        PaymentDynamoDBEntity base = new PaymentDynamoDBEntity("1", 10L, BigDecimal.TEN, PaymentStatusEnum.APPROVED);
+        PaymentDynamoDBEntity same = new PaymentDynamoDBEntity("1", 10L, BigDecimal.TEN, PaymentStatusEnum.APPROVED);
+        PaymentDynamoDBEntity diffId = new PaymentDynamoDBEntity("2", 10L, BigDecimal.TEN, PaymentStatusEnum.APPROVED);
+        PaymentDynamoDBEntity diffOrder = new PaymentDynamoDBEntity("1", 20L, BigDecimal.TEN, PaymentStatusEnum.APPROVED);
+        PaymentDynamoDBEntity diffAmount = new PaymentDynamoDBEntity("1", 10L, BigDecimal.ONE, PaymentStatusEnum.APPROVED);
+        PaymentDynamoDBEntity diffStatus = new PaymentDynamoDBEntity("1", 10L, BigDecimal.TEN, PaymentStatusEnum.REJECTED);
+
+        // Reflexive
+        assertEquals(base, base);
+
+        // Equal objects
+        assertEquals(base, same);
+        assertEquals(base.hashCode(), same.hashCode());
+
+        // Different fields
+        assertNotEquals(base, diffId);
+        assertNotEquals(base, diffOrder);
+        assertNotEquals(base, diffAmount);
+        assertNotEquals(base, diffStatus);
+
+        // Null comparison
+        assertNotEquals(base, null);
+
+        // Different type
+        assertNotEquals(base, "string");
+
+        // Objects with all null fields
+        PaymentDynamoDBEntity null1 = new PaymentDynamoDBEntity();
+        PaymentDynamoDBEntity null2 = new PaymentDynamoDBEntity();
+
+        assertEquals(null1, null2);
+        assertEquals(null1.hashCode(), null2.hashCode());
+
+        // Mixed null/non-null
+        PaymentDynamoDBEntity mixed = new PaymentDynamoDBEntity();
+        mixed.setId("X");
+
+        assertNotEquals(null1, mixed);
     }
 }
