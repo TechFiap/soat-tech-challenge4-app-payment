@@ -1,26 +1,25 @@
-package com.postechfiap_group130.techchallenge_fastfood.bdd.stepdefs;
-
-import com.postechfiap_group130.techchallenge_fastfood.api.rest.dto.request.UpdatePaymentRequestDto;
-import com.postechfiap_group130.techchallenge_fastfood.core.dtos.PaymentDto;
-import com.postechfiap_group130.techchallenge_fastfood.core.entities.PaymentStatusEnum;
-import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.env.Environment;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-
+//package com.postechfiap_group130.techchallenge_fastfood.bdd.steps;
+//
+//import com.postechfiap_group130.techchallenge_fastfood.api.rest.dto.request.UpdatePaymentRequestDto;
+//import com.postechfiap_group130.techchallenge_fastfood.core.dtos.PaymentDto;
+//import io.cucumber.java.Before;
+//import io.cucumber.java.en.And;
+//import io.cucumber.java.en.Given;
+//import io.cucumber.java.en.Then;
+//import io.cucumber.java.en.When;
+//import io.restassured.RestAssured;
+//import io.restassured.http.ContentType;
+//import io.restassured.response.Response;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.web.server.LocalServerPort;
+//import org.springframework.core.env.Environment;
+//
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//import static io.restassured.RestAssured.given;
+//import static org.hamcrest.Matchers.*;
+//
 //public class PaymentStepDefinitions {
 //
 //    @LocalServerPort
@@ -103,11 +102,32 @@ import static org.hamcrest.Matchers.*;
 //    }
 //
 //    @Given("a payment with ID {int} exists with status {string}")
-//    public void aPaymentWithIDExistsWithStatus(String paymentId, String status) {
-//        // This is a setup step - in a real test, you would create a test payment with the given ID and status
-//        this.payment = new PaymentDto(paymentId, 1L, new BigDecimal("100.00"),
-//                                    PaymentStatusEnum.valueOf(status));
+//    public void aPaymentWithIDExistsWithStatus(Integer paymentId, String status) {
+//
+//        Map<String, Object> request = new HashMap<>();
+//        request.put("id", String.valueOf(paymentId));
+//        request.put("orderId", 1L);
+//        request.put("amount", 100.00);
+//        request.put("status", status);
+//
+//        System.out.println("Creating payment via POST: " + request);
+//
+//        response = given()
+//                .contentType(ContentType.JSON)
+//                .body(request)
+//                .when()
+//                .post(paymentEndpoint);
+//
+//        System.out.println("Response status: " + response.getStatusCode());
+//        System.out.println("Response body: " + response.getBody().asString());
+//
+//        // Garantir que o pagamento foi criado
+//        response.then().statusCode(201);
+//
+//        // Guardar o objeto retornado
+//        payment = response.as(PaymentDto.class);
 //    }
+//
 //
 //    @When("I check the status of payment #{int}")
 //    public void iCheckTheStatusOfPayment(int paymentId) {
